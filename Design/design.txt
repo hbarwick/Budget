@@ -1,5 +1,5 @@
 Budget - a budget app for entering bills, expenditures and incomes.
-Budget data will be stored in a databse.
+Budget data will be stored in a mysql databse.
 
 App screens
     Logon
@@ -11,15 +11,15 @@ App screens
             Funds remaining
         Buttons
             Enter payment
-            Enter commitment
-            Amend commitments
+            Enter bill
+            Amend bills
             Amend income
             Review spending
     Enter new payment
         Payment Value
         Payment Category
         Payment Date
-    Enter new commitment
+    Enter new Bill
         Bill name
         Bill value
     Edit commitments
