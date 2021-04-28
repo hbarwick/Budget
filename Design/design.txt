@@ -1,0 +1,52 @@
+Budget - a budget app for entering bills, expenditures and incomes.
+Budget data will be stored in a databse.
+
+App screens
+    Logon
+
+    Main Menu / Summary Page
+        Summaries
+            Total spend this month
+            Total commitments
+            Funds remaining
+        Buttons
+            Enter payment
+            Enter commitment
+            Amend commitments
+            Amend income
+            Review spending
+    Enter new payment
+        Payment Value
+        Payment Category
+        Payment Date
+    Enter new commitment
+        Bill name
+        Bill value
+    Edit commitments
+        Select commitment
+        Update value
+        Delete
+    Amend income
+        Amend monthly value
+            This month
+            Recurring
+        Add one off income
+    View bills
+        Category Totals
+        Month / Year
+
+
+Database
+    Payments table
+        UID
+        Date
+        Value
+        Category
+        Extra Details
+    Commitments Table
+        UID
+        Bill name
+        Monthly Value
+    Incomes Table
+        Income name
+        Monthly value
