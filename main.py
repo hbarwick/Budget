@@ -54,6 +54,17 @@ class LogonScreen(Screen):
 
 class MainMenu(Screen):
 
+    def get_total_spend(self):
+        global currentuser
+        month = dt.today().month
+        db = DataBaseObject()
+        userquery = db.fetch_data(
+            f"""SELECT value FROM payments 
+                WHERE user = '{currentuser}'
+                AND month(date) = '{month}'
+                """)
+        return str(sum(i[0] for i in userquery))
+
     def logout_button(self):
         self.manager.current = 'logon_screen'
 
@@ -81,8 +92,9 @@ class PaymentScreen(Screen):
 
 
 class RootWidget(ScreenManager):
-    def login(self):
-        self.manager.current = 'main_menu'
+    pass
+    # def login(self):
+    #     self.manager.current = 'main_menu'
 
 
 class MainApp(App):

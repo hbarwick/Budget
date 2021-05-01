@@ -83,3 +83,17 @@ class Income(DataBaseObject):
 
 class Bill(DataBaseObject):
     pass
+
+# db = DataBaseObject()
+# userquery = db.fetch_data(
+#     f"""SELECT value FROM payments
+#         WHERE user = 'hal'
+#         AND month(date) = '5'
+#         """)
+#
+# print(userquery)
+#
+# output = sum(i[0] for i in userquery)
+#
+#
+# print(output)
