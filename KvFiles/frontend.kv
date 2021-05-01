@@ -1,0 +1,119 @@
+<LogonScreen>
+    GridLayout:
+        cols: 1
+        padding: 10
+        spacing: 10
+        Image:
+            source: 'Resources\LogonScreenImage.png'
+            size_hint_y: 0.7
+        Button:
+            id: newuser
+            text: 'Sign up for new account'
+            size_hint_y: 0.1
+            on_press: root.new_user_button()
+        TextInput:
+            id: username
+            hint_text: "Username"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: password
+            hint_text: "Password"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        Button:
+            text: 'Click to Logon'
+            size_hint_y: 0.1
+            on_press: root.logon_button()
+
+<NewUserScreen>
+    GridLayout:
+        cols: 1
+        padding: 10
+        spacing: 10
+        Image:
+        TextInput:
+            id: username
+            hint_text: "Username"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: email
+            hint_text: "Email Address"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: first_name
+            hint_text: "First Name"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: last_name
+            hint_text: "Last Name"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: password
+            hint_text: "Password"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+            password: True
+        TextInput:
+            id: confirm_password
+            hint_text: "Confirm Password"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+            password: True
+        Button:
+            text: 'Submit'
+            size_hint_y: 0.1
+            on_press: root.logon_button()
+
+
+<PaymentScreen>
+    GridLayout:
+        cols: 1
+        padding: 10
+        spacing: 10
+        Label:
+            text: "Enter New Payment"
+        TextInput:
+            id: username
+            size_hint_y: 0.1
+        TextInput:
+            id: password
+            size_hint_y: 0.1
+        Button:
+            text: 'Click to Logon'
+            size_hint_y: 0.1
+            on_press: root.logon_button()
+
+<RootWidget>:
+    LogonScreen:
+        id: logon_screen
+        name: 'logon_screen'
+    NewUserScreen:
+        id: new_user_screen
+        name: 'new_user_screen'
+    MainMenu:
+        id: main_menu
+        name: 'main_menu'
+    PaymentScreen:
+        id: payment_screen
+        name: 'payment_screen'
