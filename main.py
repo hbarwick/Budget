@@ -2,7 +2,8 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
-from kivy.uix.popup import Popup
+from users import User
+from globalmethods import popup_message
 
 Window.size = (480, 800)
 
@@ -18,11 +19,36 @@ class LogonScreen(Screen):
 
 
 class NewUserScreen(Screen):
+    def new_user(self):
+        username = self.manager.current_screen.ids.username.text
+        first_name = self.manager.current_screen.ids.first_name.text
+        last_name = self.manager.current_screen.ids.last_name.text
+        email = self.manager.current_screen.ids.email.text
+        password = self.manager.current_screen.ids.password.text
+        confirm_password = self.manager.current_screen.ids.confirm_password.text
+        userdetails = (username, first_name, last_name, email, password, confirm_password)
+        return userdetails
+
     def usercheck(self):
-        popup = Popup(title='Test popup',
-                      content=Label(text='Hello world'),
-                      size_hint=(None, None), size=(400, 400))
-        popup.open()
+        userdetails = self.new_user()
+        if userdetails[4] != userdetails[5]:
+            popup_message("Warning", "Passwords do not match")
+            return
+        elif "" in userdetails:
+            popup_message("Warning", "Not all fields populated.")
+            return
+        else:
+            user = User(userdetails[0],
+                        userdetails[1],
+                        userdetails[2],
+                        userdetails[3],
+                        userdetails[4])
+            if user.check_duplicate():
+                popup_message("Warning", "Username is taken")
+                return
+            user.update_database()
+            popup_message("Success!", f"New user '{user.username}' created.")
+            self.manager.current = 'logon_screen'
 
 
 class MainMenu(Screen):

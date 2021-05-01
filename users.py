@@ -48,23 +48,20 @@ class User(DataBaseObject):
     def check_duplicate(self):
         usercheck = self.fetch_data(f"SELECT * FROM users WHERE username = '{self.username}'")
         if usercheck == ():
-            return True
-        else:
             return False
+        else:
+            return True
 
     def update_database(self):
-        if self.check_duplicate():
-            self.run_database_command(self.new_user_sql())
-        else:
-            print("Username already taken")
+        self.run_database_command(self.new_user_sql())
         self.close_database_connection()
 
-newuser = User("hbarwick90",
-               "Hal",
-               "Barwick",
-               "hallambarwick@hotmail.com",
-               "password")
-
-newuser.update_database()
+# newuser = User("hbarwick90",
+#                "Hal",
+#                "Barwick",
+#                "hallambarwick@hotmail.com",
+#                "password")
+#
+# newuser.update_database()
 
 #newuser.run_database_command(newuser.new_user_sql())
