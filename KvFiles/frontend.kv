@@ -94,15 +94,30 @@
         Label:
             text: "Enter New Payment"
         TextInput:
-            id: username
+            id: value
+            hint_text: "Payment Value"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
+            font_size: 30
         TextInput:
-            id: password
+            id: category
+            hint_text: "Category of payment"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: extra_details
+            hint_text: "Extra Details"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.2
+            font_size: 30
         Button:
-            text: 'Click to Logon'
+            text: 'Click to submit'
             size_hint_y: 0.1
-            on_press: root.logon_button()
+            on_press: root.submit_payment()
 
 <RootWidget>:
     LogonScreen:

@@ -56,3 +56,30 @@ class User(DataBaseObject):
         self.run_database_command(self.new_user_sql())
         self.close_database_connection()
 
+
+class Payment(DataBaseObject):
+    def __init__(self, user, date, value, category, extra_details):
+        super(Payment, self).__init__()
+        self.user = user
+        self.date = date
+        self.value = value
+        self.category = category
+        self.extra_details = extra_details
+
+    def new_payment_sql(self):
+        payment = f"""
+        INSERT INTO payments (user, date, value, category, extra_details)
+        VALUES ('{self.user}', '{self.date}', '{self.value}', '{self.category}', '{self.extra_details}');
+        """
+        return payment
+
+    def update_database(self):
+        self.run_database_command(self.new_payment_sql())
+        self.close_database_connection()
+
+class Income(DataBaseObject):
+    pass
+
+
+class Bill(DataBaseObject):
+    pass

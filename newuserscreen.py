@@ -1,7 +1,7 @@
 from kivy.uix.screenmanager import Screen
 
 from globalmethods import popup_message
-from users import User
+from dbclasses import User
 
 
 class NewUserScreen(Screen):

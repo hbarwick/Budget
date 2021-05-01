@@ -8,6 +8,7 @@ kivy-deps.glew==0.3.0
 kivy-deps.sdl2==0.3.1
 Kivy-Garden==0.1.4
 Pygments==2.8.1
+PyMySQL==1.0.2
 pypiwin32==223
 pywin32==300
 requests==2.25.1

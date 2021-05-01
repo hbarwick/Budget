@@ -3,7 +3,7 @@ Budget data will be stored in a mysql databse.
 
 App screens
     Logon
-
+    New User
     Main Menu / Summary Page
         Summaries
             Total spend this month
@@ -39,14 +39,24 @@ App screens
 Database
     Payments table
         UID
+        User
         Date
         Value
         Category
         Extra De[]tails
     Commitments Table
         UID
+        User
         Bill name
         Monthly Value
     Incomes Table
+        User
         Income name
         Monthly value
+    Users
+        UID
+        Username
+        First Name
+        Last Name
+        Email
+        Password

@@ -2,9 +2,10 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
-from users import DataBaseObject
+from dbclasses import DataBaseObject, Payment
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
+from datetime import date as dt
 
 Window.size = (480, 800)
 
@@ -23,6 +24,8 @@ class LogonScreen(Screen):
         if self.check_inputs():
             if self.check_user_and_pass() != ():
                 popup_message("Ok", f"Logon successful as {self.username}")
+                global currentuser
+                currentuser = self.username
                 self.manager.current = 'main_menu'
             else:
                 popup_message("Warning", "Invalid Username and or password"
@@ -59,7 +62,21 @@ class MainMenu(Screen):
 
 
 class PaymentScreen(Screen):
-    pass
+
+    def submit_payment(self):
+        global currentuser
+        user = currentuser
+        date = dt.today().isoformat()
+        value = self.manager.current_screen.ids.value.text
+        category = self.manager.current_screen.ids.category.text
+        extra_details = self.manager.current_screen.ids.extra_details.text
+
+        payment = Payment(user, date, value, category, extra_details)
+        payment.update_database()
+        popup_message("Success", "New Payment Added"
+                                 f"\n {category}\n£{value}\n{extra_details}")
+        self.manager.current = 'main_menu'
+
 
 
 
