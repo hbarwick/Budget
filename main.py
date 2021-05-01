@@ -14,8 +14,15 @@ class LogonScreen(Screen):
 
 
 class MainMenu(Screen):
+
     def logout_button(self):
         self.manager.current = 'logon_screen'
+
+    def payment_button(self):
+        self.manager.current = 'payment_screen'
+
+class PaymentScreen(Screen):
+    pass
 
 
 class RootWidget(ScreenManager):
