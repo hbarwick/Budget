@@ -66,6 +66,23 @@
             size_hint_y: 0.1
             on_press: root.logout_button()
 
+<EnterPayment>
+    GridLayout:
+        cols: 1
+        padding: 10
+        spacing: 10
+        Label:
+            text: "Enter New Payment"
+        TextInput:
+            id: username
+            size_hint_y: 0.1
+        TextInput:
+            id: password
+            size_hint_y: 0.1
+        Button:
+            text: 'Click to Logon'
+            size_hint_y: 0.1
+            on_press: root.logon_button()
 
 <RootWidget>:
     LogonScreen:

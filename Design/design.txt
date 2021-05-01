@@ -42,7 +42,7 @@ Database
         Date
         Value
         Category
-        Extra Details
+        Extra De[]tails
     Commitments Table
         UID
         Bill name
