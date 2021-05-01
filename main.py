@@ -6,6 +6,7 @@ from kivy.core.window import Window
 Window.size = (480, 800)
 
 Builder.load_file('frontend.kv')
+Builder.load_file('mainmenu.kv')
 
 
 class LogonScreen(Screen):
