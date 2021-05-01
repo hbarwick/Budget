@@ -56,12 +56,3 @@ class User(DataBaseObject):
         self.run_database_command(self.new_user_sql())
         self.close_database_connection()
 
-# newuser = User("hbarwick90",
-#                "Hal",
-#                "Barwick",
-#                "hallambarwick@hotmail.com",
-#                "password")
-#
-# newuser.update_database()
-
-#newuser.run_database_command(newuser.new_user_sql())
