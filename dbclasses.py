@@ -1,4 +1,5 @@
 import pymysql
+import datetime as dt
 
 class DataBaseObject:
     """Base database object to hold connection to
@@ -97,3 +98,14 @@ class Bill(DataBaseObject):
 #
 #
 # print(output)
+
+# currentuser = "hal"
+# month = dt.date.today().month
+# db = DataBaseObject()
+# userquery = db.fetch_data(
+#     f"""SELECT value FROM payments
+#         WHERE user = '{currentuser}'
+#         AND month(date) = '{month}'
+#         """)
+# db.close_database_connection()
+# print(f"£{str(sum(i[0] for i in userquery))}")

@@ -12,6 +12,7 @@ Window.size = (480, 800)
 Builder.load_file('KvFiles/frontend.kv')
 Builder.load_file('KvFiles/mainmenu.kv')
 
+currentuser = "test"
 
 class LogonScreen(Screen):
 
@@ -54,8 +55,11 @@ class LogonScreen(Screen):
 
 class MainMenu(Screen):
 
-    def get_total_spend(self):
+    @property
+    def total_spend(self):
         global currentuser
+        user = currentuser
+        print(currentuser)
         month = dt.today().month
         db = DataBaseObject()
         userquery = db.fetch_data(
@@ -63,7 +67,8 @@ class MainMenu(Screen):
                 WHERE user = '{currentuser}'
                 AND month(date) = '{month}'
                 """)
-        return str(sum(i[0] for i in userquery))
+        db.close_database_connection()
+        return f"£{str(round(sum(i[0] for i in userquery),2))}"
 
     def logout_button(self):
         self.manager.current = 'logon_screen'
