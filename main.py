@@ -59,7 +59,6 @@ class MainMenu(Screen):
     def total_spend(self):
         global currentuser
         user = currentuser
-        print(currentuser)
         month = dt.today().month
         db = DataBaseObject()
         userquery = db.fetch_data(
@@ -94,12 +93,8 @@ class PaymentScreen(Screen):
         self.manager.current = 'main_menu'
 
 
-
-
 class RootWidget(ScreenManager):
     pass
-    # def login(self):
-    #     self.manager.current = 'main_menu'
 
 
 class MainApp(App):
