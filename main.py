@@ -57,6 +57,9 @@ class MainMenu(Screen):
 
     @property
     def total_spend(self):
+        """Property to return the total of payments for the
+        currently logged in user for the current month.
+        To be displayed on the main menu summary screen"""
         global currentuser
         user = currentuser
         month = dt.today().month
@@ -79,6 +82,10 @@ class MainMenu(Screen):
 class PaymentScreen(Screen):
 
     def submit_payment(self):
+        """Submits a payment to the database. Takes the value,
+        category and Extra details from the Kivy input fields,
+        date from today's date, and username from current user
+         logged in"""
         global currentuser
         user = currentuser
         date = dt.today().isoformat()

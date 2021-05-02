@@ -5,6 +5,10 @@ from dbclasses import User
 
 
 class NewUserScreen(Screen):
+
+    """Kivy Screen to create new user and add to
+    the MySQL database"""
+
     def new_user(self):
         username = self.manager.current_screen.ids.username.text
         first_name = self.manager.current_screen.ids.first_name.text

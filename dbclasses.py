@@ -78,6 +78,7 @@ class Payment(DataBaseObject):
         self.run_database_command(self.new_payment_sql())
         self.close_database_connection()
 
+
 class Income(DataBaseObject):
     pass
 
