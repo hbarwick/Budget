@@ -63,7 +63,7 @@ class MainMenu(Screen):
         db = DataBaseObject()
         userquery = db.fetch_data(
             f"""SELECT value FROM payments 
-                WHERE user = '{currentuser}'
+                WHERE user = '{user}'
                 AND month(date) = '{month}'
                 """)
         db.close_database_connection()
