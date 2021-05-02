@@ -80,10 +80,17 @@
             size_hint_y: 0.1
             font_size: 30
             password: True
-        Button:
-            text: 'Submit'
-            size_hint_y: 0.1
-            on_press: root.usercheck()
+        GridLayout:
+            cols: 2
+            size_hint_y: 0.2
+            Button:
+                text: 'Submit'
+                size_hint_y: 0.1
+                on_press: root.usercheck()
+            Button:
+                text: 'Cancel'
+                size_hint_y: 0.1
+                on_press: root.cancel()
 
 
 <PaymentScreen>

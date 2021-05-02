@@ -44,3 +44,6 @@ class NewUserScreen(Screen):
         self.manager.current_screen.ids.email.text = ""
         self.manager.current_screen.ids.password.text = ""
         self.manager.current_screen.ids.confirm_password.text = ""
+
+    def cancel(self):
+        self.manager.current = 'main_menu'
