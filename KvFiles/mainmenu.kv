@@ -4,7 +4,7 @@
         padding: 10
         spacing: 10
         Label:
-            text: 'Main Menu'
+            text: 'Welcome ' + root.manager.current_user + "!"'\n\n  Main Menu'
             size_hint_y: 0.1
         GridLayout:
             cols: 2
@@ -19,7 +19,7 @@
                 text: 'Total Bills:'
                 size_hint_y: 0.1
             Label:
-                text: '£9681'
+                text: root.manager.current_user
                 size_hint_y: 0.1
             Label:
                 text: 'Funds Remaining:'

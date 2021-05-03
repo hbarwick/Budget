@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.properties import StringProperty
 from dbclasses import DataBaseObject, Payment
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
@@ -12,7 +13,6 @@ Window.size = (480, 800)
 Builder.load_file('KvFiles/frontend.kv')
 Builder.load_file('KvFiles/mainmenu.kv')
 
-currentuser = "test"
 
 class LogonScreen(Screen):
 
@@ -25,8 +25,7 @@ class LogonScreen(Screen):
         if self.check_inputs():
             if self.check_user_and_pass() != ():
                 popup_message("Ok", f"Logon successful as {self.username}")
-                global currentuser
-                currentuser = self.username
+                self.manager.current_user = self.username
                 self.manager.current = 'main_menu'
             else:
                 popup_message("Warning", "Invalid Username and or password"
@@ -60,8 +59,7 @@ class MainMenu(Screen):
         """Property to return the total of payments for the
         currently logged in user for the current month.
         To be displayed on the main menu summary screen"""
-        global currentuser
-        user = currentuser
+        user = self.manager.current_user
         month = dt.today().month
         db = DataBaseObject()
         userquery = db.fetch_data(
@@ -86,8 +84,7 @@ class PaymentScreen(Screen):
         category and Extra details from the Kivy input fields,
         date from today's date, and username from current user
          logged in"""
-        global currentuser
-        user = currentuser
+        user = self.manager.current_user
         date = dt.today().isoformat()
         value = self.manager.current_screen.ids.value.text
         category = self.manager.current_screen.ids.category.text
@@ -101,6 +98,7 @@ class PaymentScreen(Screen):
 
 
 class RootWidget(ScreenManager):
+    current_user = StringProperty('')
     pass
 
 
