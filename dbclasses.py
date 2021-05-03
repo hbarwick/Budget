@@ -80,7 +80,24 @@ class Payment(DataBaseObject):
 
 
 class Income(DataBaseObject):
-    pass
+    def __init__(self, user, date, income_name, value, recurring):
+        super(Income, self).__init__()
+        self.user = user
+        self.date = date
+        self.income_name = income_name
+        self.value = value
+        self.recurring = recurring
+
+    def new_income_sql(self):
+        income = f"""
+        INSERT INTO income (user, date, income_name, value, recurring)
+        VALUES ('{self.user}', '{self.date}', '{self.income_name}', '{self.value}', '{self.recurring}');
+        """
+        return income
+
+    def update_database(self):
+        self.run_database_command(self.new_income_sql())
+        self.close_database_connection()
 
 
 class Bill(DataBaseObject):
@@ -110,3 +127,21 @@ class Bill(DataBaseObject):
 #         """)
 # db.close_database_connection()
 # print(f"£{str(sum(i[0] for i in userquery))}")
+
+
+# create table bills(
+#    UID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#    user VARCHAR(30) NOT NULL,
+#    date DATE,
+#    bill_name VARCHAR(30) NOT NULL,
+#    monthly_value FLOAT
+# );
+#
+# create table income(
+#    UID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#    user VARCHAR(30) NOT NULL,
+#    date DATE,
+#    income_name VARCHAR(30) NOT NULL,
+#    value FLOAT,
+#    recurring BOOLEAN
+# );

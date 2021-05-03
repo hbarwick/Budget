@@ -3,10 +3,12 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.properties import StringProperty
-from dbclasses import DataBaseObject, Payment
+from dbclasses import DataBaseObject, Payment, Income
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
 from datetime import date as dt
+from kivy.uix.togglebutton import ToggleButton
+from datepicker import DatePicker
 
 Window.size = (480, 800)
 
@@ -75,6 +77,9 @@ class MainMenu(Screen):
     def payment_button(self):
         self.manager.current = 'payment_screen'
 
+    def income_button(self):
+        self.manager.current = 'income_screen'
+
 
 class PaymentScreen(Screen):
 
@@ -96,9 +101,39 @@ class PaymentScreen(Screen):
         self.manager.current = 'main_menu'
 
 
+class BillScreen(Screen):
+    pass
+
+
+class IncomeScreen(Screen):
+
+    def submit_income(self):
+        """Submits income to the database. Takes the value,
+        description from the Kivy input fields, and recurring or
+        one off from the radio buttons
+        date from today's date, and username from current user
+         logged in"""
+        user = self.manager.current_user
+        date = dt.today().isoformat()
+        income_name = self.manager.current_screen.ids.income_name.text
+        value = self.manager.current_screen.ids.value.text
+        if self.manager.current_screen.ids.recurring.state == 'down':
+            recurring = 1
+        else:
+            recurring = 0
+
+        income = Income(user, date, income_name, value, recurring)
+        income.update_database()
+        popup_message("Success", "New Income Added"
+                                 f"\n {income_name}\n£{value}\n{recurring}")
+        self.manager.current = 'main_menu'
+
+
 class RootWidget(ScreenManager):
     current_user = StringProperty('')
     total_spend = StringProperty('')
+    total_payments = StringProperty('')
+    funds_remaining = StringProperty('')
     pass
 
 

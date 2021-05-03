@@ -43,7 +43,7 @@ Database
         Date
         Value
         Category
-        Extra De[]tails
+        Extra Details
     Commitments Table
         UID
         User
@@ -51,8 +51,10 @@ Database
         Monthly Value
     Incomes Table
         User
+        Date
         Income name
-        Monthly value
+        Value
+        Recurring
     Users
         UID
         Username

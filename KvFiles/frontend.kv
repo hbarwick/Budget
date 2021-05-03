@@ -126,6 +126,47 @@
             size_hint_y: 0.1
             on_press: root.submit_payment()
 
+<IncomeScreen>
+    GridLayout:
+        cols: 1
+        padding: 10
+        spacing: 10
+        Label:
+            text: "Enter New Income"
+        TextInput:
+            id: value
+            hint_text: "Income Value"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: income_name
+            hint_text: "Income Description"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        ToggleButton:
+            id: recurring
+            text: "Recurring"
+            state: "down"
+            group: recurring
+            halign: "center"
+            size_hint_y: 0.2
+            font_size: 30
+        ToggleButton:
+            id: oneoff
+            text: "One off"
+            group: recurring
+            halign: "center"
+            size_hint_y: 0.2
+            font_size: 30
+        Button:
+            text: 'Click to submit'
+            size_hint_y: 0.1
+            on_press: root.submit_income()
+
 <RootWidget>:
     LogonScreen:
         id: logon_screen
@@ -139,3 +180,9 @@
     PaymentScreen:
         id: payment_screen
         name: 'payment_screen'
+    BillScreen:
+        id: bill_screen
+        name: 'bill_screen'
+    IncomeScreen:
+        id: income_screen
+        name: 'income_screen'
