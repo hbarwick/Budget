@@ -57,7 +57,7 @@ class LogonScreen(Screen):
 class MainMenu(Screen):
 
     def update_total_spend(self):
-        """Property to return the total of payments for the
+        """Return the total of payments for the
         currently logged in user for the current month.
         To be displayed on the main menu summary screen"""
         user = self.manager.current_user
@@ -107,6 +107,50 @@ class BillScreen(Screen):
 
 class IncomeScreen(Screen):
 
+    def get_incomes(self):
+        monthly = self.get_monthly_incomes()
+        one_off = self.get_one_off_incomes()
+        income_string = ""
+        total_income = 0
+        for i in monthly:
+            income_string += f"Monthly Income: {i[1]} - £{i[0]}\n"
+            total_income += i[0]
+        for i in one_off:
+            income_string += f"One off Income: {i[1]} - £{i[0]}\n"
+            total_income += i[0]
+        income_string += f"\n\nTotal Income for Month: - £{total_income}"
+        self.manager.current_screen.ids.current_incomes.text = income_string
+
+    def get_monthly_incomes(self):
+        """Return the current recurring incomes
+        from the database"""
+        user = self.manager.current_user
+        db = DataBaseObject()
+        incomequery = db.fetch_data(
+            f"""SELECT value, income_name FROM income 
+                WHERE user = '{user}'
+                AND recurring = '1'
+                """)
+        db.close_database_connection()
+        return incomequery
+
+
+    def get_one_off_incomes(self):
+        """Return the one off incomes from the
+        current month from the database"""
+        user = self.manager.current_user
+        month = dt.today().month
+        db = DataBaseObject()
+        incomequery = db.fetch_data(
+            f"""SELECT value, income_name FROM income 
+                WHERE user = '{user}'
+                AND recurring = '0'
+                AND month(date) = '{month}'
+                """)
+        db.close_database_connection()
+        return incomequery
+
+
     def submit_income(self):
         """Submits income to the database. Takes the value,
         description from the Kivy input fields, and recurring or
@@ -128,6 +172,8 @@ class IncomeScreen(Screen):
                                  f"\n {income_name}\n£{value}\n{recurring}")
         self.manager.current = 'main_menu'
 
+    def cancel(self):
+        self.manager.current = 'main_menu'
 
 class RootWidget(ScreenManager):
     current_user = StringProperty('')
