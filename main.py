@@ -54,8 +54,7 @@ class LogonScreen(Screen):
 
 class MainMenu(Screen):
 
-    @property
-    def total_spend(self):
+    def update_total_spend(self):
         """Property to return the total of payments for the
         currently logged in user for the current month.
         To be displayed on the main menu summary screen"""
@@ -68,7 +67,7 @@ class MainMenu(Screen):
                 AND month(date) = '{month}'
                 """)
         db.close_database_connection()
-        return f"£{str(round(sum(i[0] for i in userquery),2))}"
+        self.manager.total_spend = f"£{str(round(sum(i[0] for i in userquery), 2))}"
 
     def logout_button(self):
         self.manager.current = 'logon_screen'
@@ -99,6 +98,7 @@ class PaymentScreen(Screen):
 
 class RootWidget(ScreenManager):
     current_user = StringProperty('')
+    total_spend = StringProperty('')
     pass
 
 
