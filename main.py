@@ -7,8 +7,6 @@ from dbclasses import DataBaseObject, Payment, Income
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
 from datetime import date as dt
-from kivy.uix.togglebutton import ToggleButton
-from datepicker import DatePicker
 
 Window.size = (480, 800)
 
@@ -83,6 +81,29 @@ class MainMenu(Screen):
 
 class PaymentScreen(Screen):
 
+    def get_payments_from_db(self):
+        """Return the total of payments for the
+        currently logged in user for the current month."""
+        user = self.manager.current_user
+        month = dt.today().month
+        db = DataBaseObject()
+        paymentquery = db.fetch_data(
+            f"""SELECT value, category, extra_details FROM payments 
+                WHERE user = '{user}'
+                AND month(date) = '{month}'
+                """)
+        db.close_database_connection()
+        return paymentquery
+
+    def get_payments(self):
+        payments = self.get_payments_from_db()
+        payment_string = ""
+        total_payments = 0
+        for i in payments:
+            payment_string += f"£{i[0]} - {i[1]} - '{i[2]}'\n"
+            total_payments += i[0]
+        self.manager.current_screen.ids.month_payments.text = payment_string
+
     def submit_payment(self):
         """Submits a payment to the database. Takes the value,
         category and Extra details from the Kivy input fields,
@@ -98,6 +119,9 @@ class PaymentScreen(Screen):
         payment.update_database()
         popup_message("Success", "New Payment Added"
                                  f"\n {category}\n£{value}\n{extra_details}")
+        self.manager.current = 'main_menu'
+
+    def cancel(self):
         self.manager.current = 'main_menu'
 
 
