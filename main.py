@@ -3,6 +3,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.properties import StringProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.popup import Popup
 from dbclasses import DataBaseObject, Payment, Income
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
@@ -12,7 +14,7 @@ Window.size = (480, 800)
 
 Builder.load_file('KvFiles/frontend.kv')
 Builder.load_file('KvFiles/mainmenu.kv')
-
+Builder.load_file('KvFiles/popup.kv')
 
 class LogonScreen(Screen):
 
@@ -80,6 +82,7 @@ class MainMenu(Screen):
 
 
 class PaymentScreen(Screen):
+    """Kivy Screen to add one off payments"""
 
     def get_payments_from_db(self):
         """Return the total of payments for the
@@ -124,6 +127,21 @@ class PaymentScreen(Screen):
     def cancel(self):
         self.manager.current = 'main_menu'
 
+    def delete_button(self):
+        show = Popups()
+        popupWindow = Popup(title="Are you sure?", content=show,
+                            size_hint=(None, None), size=(200, 200))
+        self.manager.Popups.ids.yes_button.on_press = self.cancel()
+        popupWindow.open()
+
+    def delete_last_payment(self):
+        db = DataBaseObject()
+        db.run_database_command(
+            "DELETE FROM payments order by UID DESC limit 1")
+
+
+class Popups(FloatLayout):
+    pass
 
 class BillScreen(Screen):
     pass
