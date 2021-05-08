@@ -82,6 +82,9 @@ class MainMenu(Screen):
     def income_button(self):
         self.manager.current = 'income_screen'
 
+    def bill_button(self):
+        self.manager.current = 'bill_screen'
+
 class PaymentScreen(Screen):
     """Kivy Screen to add one off payments"""
 
@@ -183,7 +186,11 @@ class YesNoPopup(Popup):
 
 
 class BillScreen(Screen):
-    pass
+    def get_bills(self):
+        pass
+
+    def delete_button(self):
+        pass
 
 
 class IncomeScreen(Screen):
