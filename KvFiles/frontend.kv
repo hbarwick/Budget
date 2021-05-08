@@ -97,48 +97,51 @@
     on_enter: root.get_payments()
     GridLayout:
         cols: 1
+        col_default_width: 0.5
         padding: 10
         spacing: 10
         Label:
             text: "This month's spending:"
             size_hint_y: 0.1
-            font_size: 20
+            font_size: 30
         Label:
             id: month_payments
             text: ""
-            size_hint_y: 0.3
-        Button:
-            text: 'Delete last Payment'
-            size_hint_y: 0.1
-            on_press: root.delete_button()
+            size_hint_y: 0.5
         Label:
             text: "Enter New Payment"
             size_hint_y: 0.1
-            font_size: 20
+            font_size: 30
         TextInput:
             id: value
             hint_text: "Payment Value"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
-            font_size: 30
+            font_size: 20
         TextInput:
             id: category
             hint_text: "Category of payment"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
-            font_size: 30
+            font_size: 20
         TextInput:
             id: extra_details
             hint_text: "Extra Details"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
-            font_size: 30
+            font_size: 20
+        Button:
+            text: 'Delete last Payment'
+            size_hint_y: 0.1
+            size_hint_x: 0.5
+            on_press: root.delete_button()
+            background_color: 1,0.2,0.2,0.8
         GridLayout:
             cols: 2
-            size_hint_y: 0.2
+            size_hint_y: 0.15
             Button:
                 text: 'Click to submit'
                 size_hint_y: 0.1
