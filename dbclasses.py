@@ -101,7 +101,23 @@ class Income(DataBaseObject):
 
 
 class Bill(DataBaseObject):
-    pass
+    def __init__(self, user, date, bill_name, monthly_value):
+        super(Bill, self).__init__()
+        self.user = user
+        self.date = date
+        self.bill_name = bill_name
+        self.monthly_value = monthly_value
+
+    def new_bill_sql(self):
+        bill = f"""
+        INSERT INTO bills (user, date, bill_name, monthly_value)
+        VALUES ('{self.user}', '{self.date}', '{self.bill_name}', '{self.monthly_value}');
+        """
+        return bill
+
+    def update_database(self):
+        self.run_database_command(self.new_bill_sql())
+        self.close_database_connection()
 
 # db = DataBaseObject()
 # userquery = db.fetch_data(

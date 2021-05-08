@@ -178,7 +178,7 @@
             size_hint_y: 0.1
             font_size: 20
         TextInput:
-            id: billname
+            id: bill_name
             hint_text: "Bill description"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -196,7 +196,7 @@
             Button:
                 text: 'Click to submit'
                 size_hint_y: 0.1
-                on_press: root.submit_payment()
+                on_press: root.submit_bill()
             Button:
                 text: 'Cancel'
                 size_hint_y: 0.1

@@ -1,13 +1,12 @@
+from datetime import date as dt
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
-from dbclasses import DataBaseObject, Income
-from datetime import date as dt
 from kivy.uix.screenmanager import Screen
-from dbclasses import DataBaseObject, Payment
+from dbclasses import DataBaseObject, Income, Bill, Payment
 from globalmethods import popup_message
 from newuserscreen import NewUserScreen
 
@@ -85,6 +84,7 @@ class MainMenu(Screen):
     def bill_button(self):
         self.manager.current = 'bill_screen'
 
+
 class PaymentScreen(Screen):
     """Kivy Screen to add one off payments"""
 
@@ -136,6 +136,7 @@ class PaymentScreen(Screen):
         db = DataBaseObject()
         db.run_database_command(
             "DELETE FROM payments order by UID DESC limit 1")
+        db.close_database_connection()
 
     def delete_button(self):
         self.pop = pop = YesNoPopup(
@@ -186,16 +187,95 @@ class YesNoPopup(Popup):
 
 
 class BillScreen(Screen):
+
     def get_bills(self):
-        pass
+        """Fetches all monthly bills from the database, displays
+        each plus a summed total to the BillScreen
+        monthly_bills text lines"""
+        bills = self.get_all_bills()
+        bill_string = ""
+        total_bills = 0
+        for i in bills:
+            bill_string += f"{i[1]} - £{i[0]}\n"
+            total_bills += i[0]
+        bill_string += f"\n\nTotal of monthly bills:   £{total_bills}"
+        self.manager.current_screen.ids.monthly_bills.text = bill_string
+
+    def get_all_bills(self):
+        """Return the current monthly bills
+        from the database"""
+        user = self.manager.current_user
+        db = DataBaseObject()
+        billquery = db.fetch_data(
+            f"""SELECT monthly_value, bill_name FROM bills 
+                WHERE user = '{user}'
+                """)
+        db.close_database_connection()
+        return billquery
 
     def delete_button(self):
         pass
+
+    def submit_bill(self):
+        """Submits bill to the database. Takes the value,
+        description from the Kivy input fields,
+        date from today's date, and username from current user
+         logged in"""
+        user = self.manager.current_user
+        date = dt.today().isoformat()
+        bill_name = self.manager.current_screen.ids.bill_name.text
+        value = self.manager.current_screen.ids.value.text
+
+        bill = Bill(user, date, bill_name, value)
+        bill.update_database()
+        popup_message("Success", "New Bill Added"
+                                 f"\n {bill_name}\n£{value}")
+        self.reset_input_fields()
+        self.get_bills()
+
+    def delete_last_bill(self):
+        db = DataBaseObject()
+        db.run_database_command(
+            "DELETE FROM bills order by UID DESC limit 1")
+        db.close_database_connection()
+
+    def delete_button(self):
+        self.pop = pop = YesNoPopup(
+            title='Are you sure?',
+            message='OK ?',
+            size_hint=(0.4, 0.3),
+            pos_hint={'x': 0.3, 'y': 0.35}
+        )
+        pop.bind(
+            on_yes=self._popup_yes,
+            on_no=self._popup_no
+        )
+        self.pop.open()
+
+    def _popup_yes(self, instance):
+        print(f'{instance} on_yes')
+        self.delete_last_bill()
+        self.get_bills()
+        self.pop.dismiss()
+
+    def _popup_no(self, instance):
+        print(f'{instance} on_no')
+        self.pop.dismiss()
+
+    def cancel(self):
+        self.manager.current = 'main_menu'
+
+    def reset_input_fields(self):
+        self.manager.current_screen.ids.bill_name.text = ""
+        self.manager.current_screen.ids.value.text = ""
 
 
 class IncomeScreen(Screen):
 
     def get_incomes(self):
+        """Fetches all monthly incomes, and all one off incomes from
+        the currnet month from the database, displays each plus
+        a summed total to the IncomeScreen current_incomes text lines"""
         monthly = self.get_monthly_incomes()
         one_off = self.get_one_off_incomes()
         income_string = ""
