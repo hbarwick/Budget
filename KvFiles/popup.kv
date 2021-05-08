@@ -1,14 +1,18 @@
-<Popups>
-    Button:
-        id: yes_button
-        text: "Yes"
-        size_hint: 1, 0.4
-        pos_hint: {"x":0, "y":0.5}
-        on_press:
-    Button:
-        id: no_button
-        text: "No"
-        size_hint: 1, 0.4
-        pos_hint: {"x":0, "y":0.0}
-        on_press:
+<YesNoPopup>:
+    FloatLayout:
+        Label:
+            size_hint: 0.8, 0.6
+            pos_hint: {'x': 0.1, 'y':0.4}
+            text: root.message
 
+        Button:
+            size_hint: 0.4, 0.35
+            pos_hint: {'x':0.1, 'y':0.05}
+            text: 'Yes'
+            on_release: root.dispatch('on_yes')
+
+        Button:
+            size_hint: 0.4, 0.35
+            pos_hint: {'x':0.5, 'y':0.05}
+            text: 'No'
+            on_release: root.dispatch('on_no')
