@@ -19,6 +19,8 @@ class NewUserScreen(Screen):
         userdetails = (username, first_name, last_name, email, password, confirm_password)
         return userdetails
 
+    # TODO implement password hashing
+
     def usercheck(self):
         userdetails = self.new_user()
         if userdetails[4] != userdetails[5]:

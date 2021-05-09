@@ -113,15 +113,15 @@
             size_hint_y: 0.1
             font_size: 30
         TextInput:
-            id: value
-            hint_text: "Payment Value"
+            id: category
+            hint_text: "Category of payment"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
             font_size: 20
         TextInput:
-            id: category
-            hint_text: "Category of payment"
+            id: value
+            hint_text: "Payment Value"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
@@ -171,15 +171,15 @@
             size_hint_y: 0.1
             font_size: 30
         TextInput:
-            id: value
-            hint_text: "Monthly bill value"
+            id: bill_name
+            hint_text: "Bill description"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
             font_size: 20
         TextInput:
-            id: bill_name
-            hint_text: "Bill description"
+            id: value
+            hint_text: "Monthly bill value"
             halign: "center"
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
             size_hint_y: 0.1
@@ -216,32 +216,28 @@
         Label:
             id: current_incomes
             text: ""
-            size_hint_y: 0.1
+            size_hint_y: 0.5
         Label:
             font_size: 30
             text: "Enter New Income"
             size_hint_y: 0.1
+        TextInput:
+            id: income_name
+            hint_text: "Income Description"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
+        TextInput:
+            id: value
+            hint_text: "Income Value"
+            halign: "center"
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+            size_hint_y: 0.1
+            font_size: 30
         GridLayout:
             cols: 2
             size_hint_y: 0.1
-            TextInput:
-                id: income_name
-                hint_text: "Income Description"
-                halign: "center"
-                padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
-                size_hint_y: 0.1
-                font_size: 30
-            TextInput:
-                id: value
-                hint_text: "Income Value"
-                halign: "center"
-                padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
-                size_hint_y: 0.1
-                font_size: 30
-
-        GridLayout:
-            cols: 2
-            size_hint_y: 0.15
             ToggleButton:
                 id: recurring
                 text: "Recurring"
@@ -255,6 +251,12 @@
                 group: recurring
                 halign: "center"
                 font_size: 30
+        Button:
+            text: 'Delete last income'
+            size_hint_y: 0.1
+            size_hint_x: 0.5
+            on_press: root.delete_button()
+            background_color: 1,0.2,0.2,0.8
         GridLayout:
             cols: 2
             size_hint_y: 0.15

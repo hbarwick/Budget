@@ -11,6 +11,7 @@ class DataBaseObject:
                                           user="root",
                                           passwd="",
                                           database="budget")
+    # TODO set up sql server on webserver
 
     def run_database_command(self, command):
         cursor = self.connection.cursor()
@@ -119,32 +120,15 @@ class Bill(DataBaseObject):
         self.run_database_command(self.new_bill_sql())
         self.close_database_connection()
 
-# db = DataBaseObject()
-# userquery = db.fetch_data(
-#     f"""SELECT value FROM payments
-#         WHERE user = 'hal'
-#         AND month(date) = '5'
-#         """)
-#
-# print(userquery)
-#
-# output = sum(i[0] for i in userquery)
-#
-#
-# print(output)
 
-# currentuser = "hal"
-# month = dt.date.today().month
-# db = DataBaseObject()
-# userquery = db.fetch_data(
-#     f"""SELECT value FROM payments
-#         WHERE user = '{currentuser}'
-#         AND month(date) = '{month}'
-#         """)
-# db.close_database_connection()
-# print(f"£{str(sum(i[0] for i in userquery))}")
-
-
+# create table users(
+#    username varcher(30) NOT NULL PRIMARY KEY,
+#    first_name VARCHAR(30),
+#    last_name VARCHAR(30),
+#    email VARCHAR(30),
+#    password VARCHAR(30)
+# );
+#
 # create table bills(
 #    UID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 #    user VARCHAR(30) NOT NULL,
@@ -161,3 +145,13 @@ class Bill(DataBaseObject):
 #    value FLOAT,
 #    recurring BOOLEAN
 # );
+#
+# create table payments(
+#    UID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#    user VARCHAR(30) NOT NULL,
+#    date DATE,
+#    value FLOAT NOT NULL,
+#    category VARCHAR(30) NOT NULL,
+#    extra_details VARCHAR(30) NOT NULL#
+# );
+

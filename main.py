@@ -173,6 +173,7 @@ class PaymentScreen(Screen):
         for i in payments:
             payment_string += f"£{i[0]} - {i[1]} - '{i[2]}'\n"
             total_payments += i[0]
+        payment_string += f"\n\nTotal - £{total_payments}"
         self.manager.current_screen.ids.month_payments.text = payment_string
 
     def submit_payment(self):
@@ -401,8 +402,37 @@ class IncomeScreen(Screen):
         income = Income(user, date, income_name, value, recurring)
         income.update_database()
         popup_message("Success", "New Income Added"
-                                 f"\n {income_name}\n£{value}\n{recurring}")
+                                 f"\n {income_name}\n£{value}")
         self.manager.current = 'main_menu'
+
+    def delete_last_income(self):
+        db = DataBaseObject()
+        db.run_database_command(
+            "DELETE FROM income order by UID DESC limit 1")
+        db.close_database_connection()
+
+    def delete_button(self):
+        self.pop = pop = YesNoPopup(
+            title='Are you sure?',
+            message='OK ?',
+            size_hint=(0.4, 0.3),
+            pos_hint={'x': 0.3, 'y': 0.35}
+        )
+        pop.bind(
+            on_yes=self._popup_yes,
+            on_no=self._popup_no
+        )
+        self.pop.open()
+
+    def _popup_yes(self, instance):
+        print(f'{instance} on_yes')
+        self.delete_last_income()
+        self.get_incomes()
+        self.pop.dismiss()
+
+    def _popup_no(self, instance):
+        print(f'{instance} on_no')
+        self.pop.dismiss()
 
     def cancel(self):
         self.manager.current = 'main_menu'

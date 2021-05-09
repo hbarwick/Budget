@@ -62,3 +62,18 @@ Database
         Last Name
         Email
         Password
+
+Payment Categories:
+    Food
+    Drink
+    Eating out
+    Home & Garden
+    Transport
+    Clothes
+    Shopping
+    Medical
+    Hobbies
+    Pet
+    Entertainment
+    Services
+    Other
