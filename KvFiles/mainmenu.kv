@@ -1,5 +1,5 @@
 <MainMenu>
-    on_enter: root.update_total_spend()
+    on_enter: root.update_summary_totals()
     GridLayout:
         cols: 1
         padding: 10
@@ -10,23 +10,32 @@
         GridLayout:
             cols: 2
             Label:
+                text: 'Total Income'
+                size_hint_y: 0.1
+            Label:
+                id: total_income
+                text: ""
+                size_hint_y: 0.1
+            Label:
                 text: 'Total spend this month'
                 size_hint_y: 0.1
             Label:
                 id: total_spend
-                text: root.manager.total_spend
+                text: ""
                 size_hint_y: 0.1
             Label:
                 text: 'Total Bills:'
                 size_hint_y: 0.1
             Label:
-                text: root.manager.current_user
+                id: total_bills
+                text: ""
                 size_hint_y: 0.1
             Label:
                 text: 'Funds Remaining:'
                 size_hint_y: 0.1
             Label:
-                text: '£23'
+                id: funds_remaining
+                text: ""
                 size_hint_y: 0.1
             Button:
                 text: 'Enter Payment'

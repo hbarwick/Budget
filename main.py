@@ -48,6 +48,7 @@ class LogonScreen(Screen):
         return userquery
 
     def check_inputs(self):
+        """Ensures both username and password field are filled in"""
         if self.username == "" or self.password == "":
             popup_message("Warning", "Please enter username and password.")
             return False
@@ -56,6 +57,38 @@ class LogonScreen(Screen):
 
 
 class MainMenu(Screen):
+
+    def update_summary_totals(self):
+        self.update_total_spend()
+        self.update_total_bills()
+        self.update_total_income()
+        self.update_funds_remaining()
+
+    def update_total_income(self):
+        """Return the total of monthly income for the
+        currently logged in user, plus any one off incomes
+        for the current month. To be displayed on
+        the main menu summary screen"""
+        user = self.manager.current_user
+        month = dt.today().month
+        db = DataBaseObject()
+        monthly_incomes = db.fetch_data(
+            f"""SELECT value FROM income 
+                WHERE user = '{user}'
+                AND recurring = '1'
+                """)
+        one_off_incomes = db.fetch_data(
+            f"""SELECT value FROM income 
+                WHERE user = '{user}'
+                AND recurring = '0'
+                AND month(date) = '{month}'
+                """)
+        db.close_database_connection()
+        monthly = float(f"{round(sum(i[0] for i in monthly_incomes), 2)}")
+        oneoff = float(f"{round(sum(i[0] for i in one_off_incomes), 2)}")
+        self.manager.total_income = str(monthly + oneoff)
+        self.manager.current_screen.ids.total_income.text \
+            = f"£{(str(self.manager.total_income))}"
 
     def update_total_spend(self):
         """Return the total of payments for the
@@ -70,7 +103,35 @@ class MainMenu(Screen):
                 AND month(date) = '{month}'
                 """)
         db.close_database_connection()
-        self.manager.total_spend = f"£{str(round(sum(i[0] for i in userquery), 2))}"
+        self.manager.total_spend = f"{round(sum(i[0] for i in userquery), 2)}"
+        self.manager.current_screen.ids.total_spend.text \
+            = f"£{str(self.manager.total_spend)}"
+
+
+    def update_total_bills(self):
+        """Queries the database to return all recurring monthly
+        bills for the currently logged in user and sum the total
+        to display on the summary screen"""
+        user = self.manager.current_user
+        db = DataBaseObject()
+        userquery = db.fetch_data(
+            f"""SELECT monthly_value FROM bills 
+                WHERE user = '{user}'
+                """)
+        db.close_database_connection()
+        self.manager.total_bills = f"{round(sum(i[0] for i in userquery), 2)}"
+        self.manager.current_screen.ids.total_bills.text \
+            = f"£{str(self.manager.total_bills)}"
+
+    def update_funds_remaining(self):
+        self.manager.funds_remaining = str(
+            float(self.manager.total_income) -
+            float(self.manager.total_payments) -
+            float(self.manager.total_spend)
+        )
+        self.manager.current_screen.ids.funds_remaining.text =\
+            (f"£{self.manager.funds_remaining}")
+
 
     def logout_button(self):
         self.manager.current = 'logon_screen'
@@ -89,8 +150,9 @@ class PaymentScreen(Screen):
     """Kivy Screen to add one off payments"""
 
     def get_payments_from_db(self):
-        """Return the total of payments for the
-        currently logged in user for the current month."""
+        """Queries the database and returns the
+        total of payments for the currently logged
+        in user for the current month."""
         user = self.manager.current_user
         month = dt.today().month
         db = DataBaseObject()
@@ -103,6 +165,8 @@ class PaymentScreen(Screen):
         return paymentquery
 
     def get_payments(self):
+        """Builds string of payments returned from database
+        to display in the payment_string field"""
         payments = self.get_payments_from_db()
         payment_string = ""
         total_payments = 0
@@ -348,6 +412,7 @@ class RootWidget(ScreenManager):
     total_spend = StringProperty('')
     total_payments = StringProperty('')
     funds_remaining = StringProperty('')
+    total_income = StringProperty('')
     pass
 
 
