@@ -124,10 +124,10 @@ class MainMenu(Screen):
             = f"£{str(self.manager.total_bills)}"
 
     def update_funds_remaining(self):
-        self.manager.funds_remaining = str(
-            float(self.manager.total_income) -
-            float(self.manager.total_payments) -
-            float(self.manager.total_spend)
+        self.manager.funds_remaining = str(round(
+            float(self.manager.total_income) - (
+            float(self.manager.total_spend) +
+            float(self.manager.total_bills)), 2)
         )
         self.manager.current_screen.ids.funds_remaining.text =\
             (f"£{self.manager.funds_remaining}")
@@ -410,6 +410,7 @@ class IncomeScreen(Screen):
 class RootWidget(ScreenManager):
     current_user = StringProperty('')
     total_spend = StringProperty('')
+    total_bills = StringProperty('')
     total_payments = StringProperty('')
     funds_remaining = StringProperty('')
     total_income = StringProperty('')
