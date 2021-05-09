@@ -107,7 +107,6 @@ class MainMenu(Screen):
         self.manager.current_screen.ids.total_spend.text \
             = f"£{str(self.manager.total_spend)}"
 
-
     def update_total_bills(self):
         """Queries the database to return all recurring monthly
         bills for the currently logged in user and sum the total
@@ -204,15 +203,14 @@ class PaymentScreen(Screen):
         db.close_database_connection()
 
     def delete_button(self):
-        self.pop = pop = YesNoPopup(
+        self.pop = YesNoPopup(
             title='Are you sure?',
             message='OK ?',
             size_hint=(0.4, 0.3),
             pos_hint={'x': 0.3, 'y': 0.35}
         )
-        pop.bind(
-            on_yes=self._popup_yes,
-            on_no=self._popup_no
+        self.pop.bind(
+            on_yes=self._popup_yes
         )
         self.pop.open()
 
@@ -220,10 +218,6 @@ class PaymentScreen(Screen):
         print(f'{instance} on_yes')
         self.delete_last_payment()
         self.get_payments()
-        self.pop.dismiss()
-
-    def _popup_no(self, instance):
-        print(f'{instance} on_no')
         self.pop.dismiss()
 
     def reset_input_fields(self):
@@ -234,6 +228,7 @@ class PaymentScreen(Screen):
     # TODO - Strip out any non digit char from value input
     # TODO - Add check for value type in input fields
     # TODO - Add check to ensure fields are filled
+
 
 class YesNoPopup(Popup):
     __events__ = ('on_yes', 'on_no')
@@ -248,7 +243,7 @@ class YesNoPopup(Popup):
         pass
 
     def on_no(self):
-        pass
+        self.dismiss()
 
 
 class BillScreen(Screen):
@@ -278,9 +273,6 @@ class BillScreen(Screen):
         db.close_database_connection()
         return billquery
 
-    def delete_button(self):
-        pass
-
     def submit_bill(self):
         """Submits bill to the database. Takes the value,
         description from the Kivy input fields,
@@ -305,15 +297,14 @@ class BillScreen(Screen):
         db.close_database_connection()
 
     def delete_button(self):
-        self.pop = pop = YesNoPopup(
+        self.pop = YesNoPopup(
             title='Are you sure?',
             message='OK ?',
             size_hint=(0.4, 0.3),
             pos_hint={'x': 0.3, 'y': 0.35}
         )
-        pop.bind(
-            on_yes=self._popup_yes,
-            on_no=self._popup_no
+        self.pop.bind(
+            on_yes=self._popup_yes
         )
         self.pop.open()
 
@@ -321,10 +312,6 @@ class BillScreen(Screen):
         print(f'{instance} on_yes')
         self.delete_last_bill()
         self.get_bills()
-        self.pop.dismiss()
-
-    def _popup_no(self, instance):
-        print(f'{instance} on_no')
         self.pop.dismiss()
 
     def cancel(self):
@@ -412,15 +399,17 @@ class IncomeScreen(Screen):
         db.close_database_connection()
 
     def delete_button(self):
-        self.pop = pop = YesNoPopup(
+        yes_no(self._popup_yes)
+
+    def delete_button(self):
+        self.pop = YesNoPopup(
             title='Are you sure?',
             message='OK ?',
             size_hint=(0.4, 0.3),
             pos_hint={'x': 0.3, 'y': 0.35}
         )
-        pop.bind(
-            on_yes=self._popup_yes,
-            on_no=self._popup_no
+        self.pop.bind(
+            on_yes=self._popup_yes
         )
         self.pop.open()
 
@@ -428,10 +417,6 @@ class IncomeScreen(Screen):
         print(f'{instance} on_yes')
         self.delete_last_income()
         self.get_incomes()
-        self.pop.dismiss()
-
-    def _popup_no(self, instance):
-        print(f'{instance} on_no')
         self.pop.dismiss()
 
     def cancel(self):
