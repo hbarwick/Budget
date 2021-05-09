@@ -1,6 +1,6 @@
 from datetime import date as dt
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.properties import StringProperty
@@ -17,7 +17,13 @@ Builder.load_file('KvFiles/frontend.kv')
 Builder.load_file('KvFiles/mainmenu.kv')
 Builder.load_file('KvFiles/popup.kv')
 
+
 class LogonScreen(Screen):
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.username = None
+        self.password = None
 
     def get_credentials(self):
         self.username = self.manager.current_screen.ids.username.text
@@ -125,12 +131,11 @@ class MainMenu(Screen):
     def update_funds_remaining(self):
         self.manager.funds_remaining = str(round(
             float(self.manager.total_income) - (
-            float(self.manager.total_spend) +
-            float(self.manager.total_bills)), 2)
+                    float(self.manager.total_spend) +
+                    float(self.manager.total_bills)), 2)
         )
         self.manager.current_screen.ids.funds_remaining.text =\
-            (f"£{self.manager.funds_remaining}")
-
+            f"£{self.manager.funds_remaining}"
 
     def logout_button(self):
         self.manager.current = 'logon_screen'
@@ -147,6 +152,15 @@ class MainMenu(Screen):
 
 class PaymentScreen(Screen):
     """Kivy Screen to add one off payments"""
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.pop = YesNoPopup(
+            title='Are you sure?',
+            message='OK ?',
+            size_hint=(0.4, 0.3),
+            pos_hint={'x': 0.3, 'y': 0.35}
+        )
 
     def get_payments_from_db(self):
         """Queries the database and returns the
@@ -196,19 +210,14 @@ class PaymentScreen(Screen):
     def cancel(self):
         self.manager.current = 'main_menu'
 
-    def delete_last_payment(self):
+    @staticmethod
+    def delete_last_payment():
         db = DataBaseObject()
         db.run_database_command(
             "DELETE FROM payments order by UID DESC limit 1")
         db.close_database_connection()
 
     def delete_button(self):
-        self.pop = YesNoPopup(
-            title='Are you sure?',
-            message='OK ?',
-            size_hint=(0.4, 0.3),
-            pos_hint={'x': 0.3, 'y': 0.35}
-        )
         self.pop.bind(
             on_yes=self._popup_yes
         )
@@ -247,6 +256,15 @@ class YesNoPopup(Popup):
 
 
 class BillScreen(Screen):
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.pop = YesNoPopup(
+            title='Are you sure?',
+            message='OK ?',
+            size_hint=(0.4, 0.3),
+            pos_hint={'x': 0.3, 'y': 0.35}
+        )
 
     def get_bills(self):
         """Fetches all monthly bills from the database, displays
@@ -290,19 +308,14 @@ class BillScreen(Screen):
         self.reset_input_fields()
         self.get_bills()
 
-    def delete_last_bill(self):
+    @staticmethod
+    def delete_last_bill():
         db = DataBaseObject()
         db.run_database_command(
             "DELETE FROM bills order by UID DESC limit 1")
         db.close_database_connection()
 
     def delete_button(self):
-        self.pop = YesNoPopup(
-            title='Are you sure?',
-            message='OK ?',
-            size_hint=(0.4, 0.3),
-            pos_hint={'x': 0.3, 'y': 0.35}
-        )
         self.pop.bind(
             on_yes=self._popup_yes
         )
@@ -323,6 +336,15 @@ class BillScreen(Screen):
 
 
 class IncomeScreen(Screen):
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.pop = YesNoPopup(
+            title='Are you sure?',
+            message='OK ?',
+            size_hint=(0.4, 0.3),
+            pos_hint={'x': 0.3, 'y': 0.35}
+        )
 
     def get_incomes(self):
         """Fetches all monthly incomes, and all one off incomes from
@@ -354,7 +376,6 @@ class IncomeScreen(Screen):
         db.close_database_connection()
         return incomequery
 
-
     def get_one_off_incomes(self):
         """Return the one off incomes from the
         current month from the database"""
@@ -369,7 +390,6 @@ class IncomeScreen(Screen):
                 """)
         db.close_database_connection()
         return incomequery
-
 
     def submit_income(self):
         """Submits income to the database. Takes the value,
@@ -392,22 +412,14 @@ class IncomeScreen(Screen):
                                  f"\n {income_name}\n£{value}")
         self.manager.current = 'main_menu'
 
-    def delete_last_income(self):
+    @staticmethod
+    def delete_last_income():
         db = DataBaseObject()
         db.run_database_command(
             "DELETE FROM income order by UID DESC limit 1")
         db.close_database_connection()
 
     def delete_button(self):
-        yes_no(self._popup_yes)
-
-    def delete_button(self):
-        self.pop = YesNoPopup(
-            title='Are you sure?',
-            message='OK ?',
-            size_hint=(0.4, 0.3),
-            pos_hint={'x': 0.3, 'y': 0.35}
-        )
         self.pop.bind(
             on_yes=self._popup_yes
         )
@@ -421,6 +433,7 @@ class IncomeScreen(Screen):
 
     def cancel(self):
         self.manager.current = 'main_menu'
+
 
 class RootWidget(ScreenManager):
     current_user = StringProperty('')
@@ -439,5 +452,3 @@ class MainApp(App):
 
 
 MainApp().run()
-
-
