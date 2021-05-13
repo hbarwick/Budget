@@ -6,7 +6,7 @@ from kivy.core.window import Window
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
-from dbclasses import DataBaseObject, Income, Bill, Payment
+from dbclasses import DataBaseObject, Income, Bill, Payment, User
 from globalmethods import popup_message
 
 Window.size = (480, 800)
