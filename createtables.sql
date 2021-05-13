@@ -1,6 +1,6 @@
-CREATE DATABASE budget2;
+CREATE DATABASE budget;
 
-USE budget2;
+USE budget;
 
 create table users(
    username varchar(30) NOT NULL PRIMARY KEY,

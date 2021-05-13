@@ -17,7 +17,7 @@ createtables.sql will create required database and table structure.
 
 From logon screen can create new user to add to the database or log on as an existing user.
 
-Enter Payment, Enter Bill, Amend Income screens are set up to allow payments, ]
+Enter Payment, Enter Bill, Amend Income screens are set up to allow payments,
 bills and spending to be added. Each screen will update with a summary of the current month's figures.
 
 The main menu will show summaries of total income, total spend, total bills and total finds remaining.
