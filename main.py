@@ -192,16 +192,16 @@ class MainMenu(Screen):
         self.manager.current_screen.ids.funds_remaining.text =\
             f"£{self.manager.funds_remaining}"
 
-    def logout_button(self):
+    def on_logout_button_pressed(self):
         self.manager.current = 'logon_screen'
 
-    def payment_button(self):
+    def on_payment_button_pressed(self):
         self.manager.current = 'payment_screen'
 
-    def income_button(self):
+    def on_income_button_pressed(self):
         self.manager.current = 'income_screen'
 
-    def bill_button(self):
+    def on_bill_button_pressed(self):
         self.manager.current = 'bill_screen'
 
 

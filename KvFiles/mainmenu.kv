@@ -40,11 +40,11 @@
             Button:
                 text: 'Enter Payment'
                 size_hint_y: 0.1
-                on_release: root.payment_button()
+                on_release: root.on_payment_button_pressed()
             Button:
                 text: 'Enter Bill'
                 size_hint_y: 0.1
-                on_release: root.bill_button()
+                on_release: root.on_bill_button_pressed()
             Button:
                 text: 'Amend Bills'
                 size_hint_y: 0.1
@@ -52,8 +52,8 @@
             Button:
                 text: 'Amend Incomes'
                 size_hint_y: 0.1
-                on_release: root.income_button()
+                on_release: root.on_income_button_pressed()
         Button:
             text: 'Review Spending'
             size_hint_y: 0.1
-            on_release: root.logout_button()
+            on_release: root.on_logout_button_pressed()
