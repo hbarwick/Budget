@@ -56,18 +56,21 @@ class User(DataBaseObject):
         self.password = password
 
     def new_user_sql(self):
-        user = f"""
-        INSERT INTO users (username, first_name, last_name, email, password)
-        VALUES ('{self.username}', '{self.first_name}', '{self.last_name}', '{self.email}', '{self.password}');
+        user = """INSERT INTO users (username, first_name, last_name, email, password)
+        VALUES (%s, %s, %s, %s, %s);
         """
-        return user
+        args = (self.username, self.first_name, self.last_name, self.email, self.password)
+        return user, args
 
     def check_duplicate(self):
-        usercheck = self.fetch_data(f"SELECT * FROM users WHERE username = '{self.username}'")
+        query = "SELECT * FROM users WHERE username = %s"
+        args = (self.username)
+        usercheck = self.fetch_data(query, args)
         return usercheck == ()
 
     def update_database(self):
-        self.run_database_command(self.new_user_sql())
+        user, args = self.new_user_sql()
+        self.run_database_command(user, args)
         self.close_database_connection()
 
 
@@ -81,14 +84,14 @@ class Payment(DataBaseObject):
         self.extra_details = extra_details
 
     def new_payment_sql(self):
-        payment = f"""
-        INSERT INTO payments (user, date, value, category, extra_details)
-        VALUES ('{self.user}', '{self.date}', '{self.value}', '{self.category}', '{self.extra_details}');
-        """
-        return payment
+        query = """INSERT INTO payments (user, date, value, category, extra_details)
+        VALUES (%s, %s, %s, %s, %s);"""
+        args = (self.user, self.date, self.value, self.category, self.extra_details)
+        return query, args
 
     def update_database(self):
-        self.run_database_command(self.new_payment_sql())
+        query, args = self.new_payment_sql()
+        self.run_database_command(query, args)
         self.close_database_connection()
 
 
@@ -102,14 +105,14 @@ class Income(DataBaseObject):
         self.recurring = recurring
 
     def new_income_sql(self):
-        income = f"""
-        INSERT INTO income (user, date, income_name, value, recurring)
-        VALUES ('{self.user}', '{self.date}', '{self.income_name}', '{self.value}', '{self.recurring}');
-        """
-        return income
+        query = """INSERT INTO income (user, date, income_name, value, recurring)
+        VALUES (%s, %s, %s, %s, %s);"""
+        args = (self.user, self.date, self.income_name, self.value, self.recurring)
+        return query, args
 
     def update_database(self):
-        self.run_database_command(self.new_income_sql())
+        query, args = self.new_income_sql()
+        self.run_database_command(query, args)
         self.close_database_connection()
 
 
@@ -122,12 +125,13 @@ class Bill(DataBaseObject):
         self.monthly_value = monthly_value
 
     def new_bill_sql(self):
-        bill = f"""
-        INSERT INTO bills (user, date, bill_name, monthly_value)
-        VALUES ('{self.user}', '{self.date}', '{self.bill_name}', '{self.monthly_value}');
+        query = """INSERT INTO bills (user, date, bill_name, monthly_value)
+        VALUES (%s, %s, %s, %s);
         """
-        return bill
+        args = (self.user, self.date, self.bill_name, self.monthly_value)
+        return query, args
 
     def update_database(self):
-        self.run_database_command(self.new_bill_sql())
+        query, args = self.new_bill_sql()
+        self.run_database_command(query, args)
         self.close_database_connection()
