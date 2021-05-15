@@ -5,9 +5,9 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from dbclasses import DataBaseObject, Income, Bill, Payment, User
-from globalmethods import popup_message
 
 Window.size = (480, 800)
 
@@ -44,11 +44,12 @@ class LogonScreen(Screen):
 
     def check_user_and_pass(self):
         db = DataBaseObject()
-        userquery = db.fetch_data(
-            f"""SELECT * FROM users 
-                WHERE username = '{self.username}'
-                AND password = '{self.password}'
-                """)
+        query ="""SELECT * FROM users 
+               WHERE username = %s
+               AND password = %s
+               """
+        args = (self.username, self.password)
+        userquery = db.fetch_data(query, args)
         return userquery
 
     def check_inputs(self):
@@ -72,26 +73,31 @@ class NewUserScreen(Screen):
         email = self.manager.current_screen.ids.email.text
         password = self.manager.current_screen.ids.password.text
         confirm_password = self.manager.current_screen.ids.confirm_password.text
-        userdetails = (username, first_name, last_name, email, password, confirm_password)
+        userdetails = {"username": username,
+                       "first_name": first_name,
+                       "last_name": last_name,
+                       "email": email,
+                       "password": password,
+                       "confirm_password": confirm_password}
         return userdetails
 
     # TODO implement password hashing
 
     def usercheck(self):
         userdetails = self.new_user()
-        if userdetails[4] != userdetails[5]:
+        if userdetails["password"] != userdetails["confirm_password"]:
             popup_message("Warning", "Passwords do not match")
             return
         elif "" in userdetails:
             popup_message("Warning", "Not all fields populated.")
             return
         else:
-            user = User(userdetails[0],
-                        userdetails[1],
-                        userdetails[2],
-                        userdetails[3],
-                        userdetails[4])
-            if user.check_duplicate():
+            user = User(userdetails["username"],
+                        userdetails["first_name"],
+                        userdetails["last_name"],
+                        userdetails["email"],
+                        userdetails["password"])
+            if not user.check_duplicate():
                 popup_message("Warning", "Username is taken")
                 return
             user.update_database()
@@ -491,7 +497,6 @@ class RootWidget(ScreenManager):
     total_payments = StringProperty('')
     funds_remaining = StringProperty('')
     total_income = StringProperty('')
-    pass
 
 
 class MainApp(App):
@@ -499,5 +504,10 @@ class MainApp(App):
     def build(self):
         return RootWidget()
 
+def popup_message(title, message):
+    popup = Popup(title=title,
+                  content=Label(text=message),
+                  size_hint=(None, None), size=(400, 400))
+    popup.open()
 
 MainApp().run()

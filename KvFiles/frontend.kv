@@ -10,7 +10,7 @@
             id: newuser
             text: 'Sign up for new account'
             size_hint_y: 0.1
-            on_press: root.new_user_button()
+            on_release: root.new_user_button()
         TextInput:
             id: username
             hint_text: "Username"
@@ -29,7 +29,7 @@
         Button:
             text: 'Click to Logon'
             size_hint_y: 0.1
-            on_press: root.logon_button()
+            on_release: root.logon_button()
 
 <NewUserScreen>
     GridLayout:
@@ -86,11 +86,11 @@
             Button:
                 text: 'Submit'
                 size_hint_y: 0.1
-                on_press: root.usercheck()
+                on_release: root.usercheck()
             Button:
                 text: 'Cancel'
                 size_hint_y: 0.1
-                on_press: root.cancel()
+                on_release: root.cancel()
 
 
 <PaymentScreen>
@@ -137,7 +137,7 @@
             text: 'Delete last Payment'
             size_hint_y: 0.1
             size_hint_x: 0.5
-            on_press: root.delete_button()
+            on_release: root.delete_button()
             background_color: 1,0.2,0.2,0.8
         GridLayout:
             cols: 2
@@ -145,11 +145,11 @@
             Button:
                 text: 'Click to submit'
                 size_hint_y: 0.1
-                on_press: root.submit_payment()
+                on_release: root.submit_payment()
             Button:
                 text: 'Cancel'
                 size_hint_y: 0.1
-                on_press: root.cancel()
+                on_release: root.cancel()
 
 <BillScreen>
     on_enter: root.get_bills()
@@ -188,7 +188,7 @@
             text: 'Delete last bill'
             size_hint_y: 0.1
             size_hint_x: 0.5
-            on_press: root.delete_button()
+            on_release: root.delete_button()
             background_color: 1,0.2,0.2,0.8
         GridLayout:
             cols: 2
@@ -196,11 +196,11 @@
             Button:
                 text: 'Click to submit'
                 size_hint_y: 0.1
-                on_press: root.submit_bill()
+                on_release: root.submit_bill()
             Button:
                 text: 'Cancel'
                 size_hint_y: 0.1
-                on_press: root.cancel()
+                on_release: root.cancel()
 
 
 <IncomeScreen>
@@ -255,7 +255,7 @@
             text: 'Delete last income'
             size_hint_y: 0.1
             size_hint_x: 0.5
-            on_press: root.delete_button()
+            on_release: root.delete_button()
             background_color: 1,0.2,0.2,0.8
         GridLayout:
             cols: 2
@@ -263,11 +263,11 @@
             Button:
                 text: 'Click to submit'
                 size_hint_y: 0.1
-                on_press: root.submit_income()
+                on_release: root.submit_income()
             Button:
                 text: 'Cancel'
                 size_hint_y: 0.1
-                on_press: root.cancel()
+                on_release: root.cancel()
 
 <RootWidget>:
     LogonScreen:

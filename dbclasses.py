@@ -13,15 +13,15 @@ class DataBaseObject:
                                           database="budget")
     # TODO set up sql server on webserver
 
-    def run_database_command(self, command):
+    def run_database_command(self, command, args=None):
         cursor = self.connection.cursor()
-        cursor.execute(command)
+        cursor.execute(command, args)
         self.connection.commit()
         return cursor
 
-    def fetch_data(self, command):
+    def fetch_data(self, command, args=None):
         """Applies the fetchall method to the cursor to return output from database"""
-        cursor = self.run_database_command(command)
+        cursor = self.run_database_command(command, args)
         rows = cursor.fetchall()
         cursor.close()
         return rows
@@ -49,10 +49,7 @@ class User(DataBaseObject):
 
     def check_duplicate(self):
         usercheck = self.fetch_data(f"SELECT * FROM users WHERE username = '{self.username}'")
-        if usercheck == ():
-            return False
-        else:
-            return True
+        return usercheck == ()
 
     def update_database(self):
         self.run_database_command(self.new_user_sql())
