@@ -43,14 +43,14 @@ class LogonScreen(Screen):
         self.manager.current = 'new_user_screen'
 
     def check_user_and_pass(self):
-        db = DataBaseObject()
-        query ="""SELECT * FROM users 
-               WHERE username = %s
-               AND password = %s
-               """
-        args = (self.username, self.password)
-        userquery = db.fetch_data(query, args)
-        return userquery
+        with DataBaseObject() as db:
+            query ="""SELECT * FROM users 
+                   WHERE username = %s
+                   AND password = %s
+                   """
+            args = (self.username, self.password)
+            userquery = db.fetch_data(query, args)
+            return userquery
 
     def check_inputs(self):
         """Ensures both username and password field are filled in"""
@@ -132,21 +132,24 @@ class MainMenu(Screen):
         the main menu summary screen"""
         user = self.manager.current_user
         month = dt.today().month
-        db = DataBaseObject()
-        monthly_incomes = db.fetch_data(
-            f"""SELECT SUM(value) FROM income 
-                WHERE user = '{user}'
-                AND recurring = '1'
-                """)
-        one_off_incomes = db.fetch_data(
-            f"""SELECT SUM(value) FROM income 
-                WHERE user = '{user}'
-                AND recurring = '0'
-                AND month(date) = '{month}'
-                """)
-        db.close_database_connection()
+        with DataBaseObject() as db:
+            monthly_incomes = db.fetch_data(
+                f"""SELECT SUM(value) FROM income 
+                    WHERE user = '{user}'
+                    AND recurring = '1'
+                    """)
+            one_off_incomes = db.fetch_data(
+                f"""SELECT SUM(value) FROM income 
+                    WHERE user = '{user}'
+                    AND recurring = '0'
+                    AND month(date) = '{month}'
+                    """)
         monthly = monthly_incomes[0][0]
         oneoff = one_off_incomes[0][0]
+        if monthly == None:
+            monthly = 0
+        if oneoff == None:
+            oneoff = 0
         self.manager.total_income = str(round(monthly + oneoff, 2))
         self.manager.current_screen.ids.total_income.text \
             = f"£{(str(self.manager.total_income))}"
@@ -157,14 +160,16 @@ class MainMenu(Screen):
         To be displayed on the main menu summary screen"""
         user = self.manager.current_user
         month = dt.today().month
-        db = DataBaseObject()
-        userquery = db.fetch_data(
-            f"""SELECT SUM(value) FROM payments 
-                WHERE user = '{user}'
-                AND month(date) = '{month}'
-                """)
-        db.close_database_connection()
-        self.manager.total_spend = str(round(userquery[0][0], 2))
+        with DataBaseObject() as db:
+            userquery = db.fetch_data(
+                f"""SELECT SUM(value) FROM payments 
+                    WHERE user = '{user}'
+                    AND month(date) = '{month}'
+                    """)
+        if userquery[0][0] == None:
+            self.manager.total_spend = "0"
+        else:
+            self.manager.total_spend = str(round(userquery[0][0], 2))
         self.manager.current_screen.ids.total_spend.text \
             = f"£{str(self.manager.total_spend)}"
 
@@ -173,13 +178,15 @@ class MainMenu(Screen):
         bills for the currently logged in user and sum the total
         to display on the summary screen"""
         user = self.manager.current_user
-        db = DataBaseObject()
-        userquery = db.fetch_data(
-            f"""SELECT sum(monthly_value) FROM bills 
-                WHERE user = '{user}'
-                """)
-        db.close_database_connection()
-        self.manager.total_bills = str(round(userquery[0][0], 2))
+        with DataBaseObject() as db:
+            userquery = db.fetch_data(
+                f"""SELECT sum(monthly_value) FROM bills 
+                    WHERE user = '{user}'
+                    """)
+        if userquery[0][0] == None:
+            self.manager.total_bills = "0"
+        else:
+            self.manager.total_bills = str(round(userquery[0][0], 2))
         self.manager.current_screen.ids.total_bills.text \
             = f"£{str(self.manager.total_bills)}"
 
@@ -223,13 +230,12 @@ class PaymentScreen(Screen):
         in user for the current month."""
         user = self.manager.current_user
         month = dt.today().month
-        db = DataBaseObject()
-        paymentquery = db.fetch_data(
-            f"""SELECT value, category, extra_details FROM payments 
-                WHERE user = '{user}'
-                AND month(date) = '{month}'
-                """)
-        db.close_database_connection()
+        with DataBaseObject() as db:
+            paymentquery = db.fetch_data(
+                f"""SELECT value, category, extra_details FROM payments 
+                    WHERE user = '{user}'
+                    AND month(date) = '{month}'
+                    """)
         return paymentquery
 
     def get_payments(self):
@@ -267,10 +273,9 @@ class PaymentScreen(Screen):
 
     @staticmethod
     def delete_last_payment():
-        db = DataBaseObject()
-        db.run_database_command(
-            "DELETE FROM payments order by UID DESC limit 1")
-        db.close_database_connection()
+        with DataBaseObject() as db:
+            db.run_database_command(
+                "DELETE FROM payments order by UID DESC limit 1")
 
     def delete_button(self):
         self.pop.bind(
@@ -338,13 +343,12 @@ class BillScreen(Screen):
         """Return the current monthly bills
         from the database"""
         user = self.manager.current_user
-        db = DataBaseObject()
-        billquery = db.fetch_data(
-            f"""SELECT monthly_value, bill_name FROM bills 
-                WHERE user = '{user}'
-                """)
-        db.close_database_connection()
-        return billquery
+        with DataBaseObject() as db:
+            billquery = db.fetch_data(
+                f"""SELECT monthly_value, bill_name FROM bills 
+                    WHERE user = '{user}'
+                    """)
+            return billquery
 
     def submit_bill(self):
         """Submits bill to the database. Takes the value,
@@ -365,10 +369,9 @@ class BillScreen(Screen):
 
     @staticmethod
     def delete_last_bill():
-        db = DataBaseObject()
-        db.run_database_command(
-            "DELETE FROM bills order by UID DESC limit 1")
-        db.close_database_connection()
+        with DataBaseObject() as db:
+            db.run_database_command(
+                "DELETE FROM bills order by UID DESC limit 1")
 
     def delete_button(self):
         self.pop.bind(
@@ -403,7 +406,7 @@ class IncomeScreen(Screen):
 
     def get_incomes(self):
         """Fetches all monthly incomes, and all one off incomes from
-        the currnet month from the database, displays each plus
+        the current month from the database, displays each plus
         a summed total to the IncomeScreen current_incomes text lines"""
         monthly = self.get_monthly_incomes()
         one_off = self.get_one_off_incomes()
@@ -422,29 +425,27 @@ class IncomeScreen(Screen):
         """Return the current recurring incomes
         from the database"""
         user = self.manager.current_user
-        db = DataBaseObject()
-        incomequery = db.fetch_data(
-            f"""SELECT value, income_name FROM income 
-                WHERE user = '{user}'
-                AND recurring = '1'
-                """)
-        db.close_database_connection()
-        return incomequery
+        with DataBaseObject() as db:
+            incomequery = db.fetch_data(
+                f"""SELECT value, income_name FROM income 
+                    WHERE user = '{user}'
+                    AND recurring = '1'
+                    """)
+            return incomequery
 
     def get_one_off_incomes(self):
         """Return the one off incomes from the
         current month from the database"""
         user = self.manager.current_user
         month = dt.today().month
-        db = DataBaseObject()
-        incomequery = db.fetch_data(
-            f"""SELECT value, income_name FROM income 
-                WHERE user = '{user}'
-                AND recurring = '0'
-                AND month(date) = '{month}'
-                """)
-        db.close_database_connection()
-        return incomequery
+        with DataBaseObject() as db:
+            incomequery = db.fetch_data(
+                f"""SELECT value, income_name FROM income 
+                    WHERE user = '{user}'
+                    AND recurring = '0'
+                    AND month(date) = '{month}'
+                    """)
+            return incomequery
 
     def submit_income(self):
         """Submits income to the database. Takes the value,
@@ -469,10 +470,9 @@ class IncomeScreen(Screen):
 
     @staticmethod
     def delete_last_income():
-        db = DataBaseObject()
-        db.run_database_command(
-            "DELETE FROM income order by UID DESC limit 1")
-        db.close_database_connection()
+        with DataBaseObject() as db:
+            db.run_database_command(
+                "DELETE FROM income order by UID DESC limit 1")
 
     def delete_button(self):
         self.pop.bind(

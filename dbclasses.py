@@ -6,12 +6,27 @@ class DataBaseObject:
     the MYSQL database and run commands to fetch data
     and update tables."""
 
+    # TODO set up sql server on webserver
+
     def __init__(self):
         self.connection = pymysql.connect(host="localhost",
                                           user="root",
                                           passwd="",
                                           database="budget")
-    # TODO set up sql server on webserver
+
+    def __enter__(self):
+        self.connection = pymysql.connect(host="localhost",
+                                          user="root",
+                                          passwd="",
+                                          database="budget")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_tb is None:
+            self.connection.commit()
+        else:
+            self.connection.rollback()
+        self.connection.close()
 
     def run_database_command(self, command, args=None):
         cursor = self.connection.cursor()
