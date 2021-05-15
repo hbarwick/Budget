@@ -134,20 +134,20 @@ class MainMenu(Screen):
         month = dt.today().month
         db = DataBaseObject()
         monthly_incomes = db.fetch_data(
-            f"""SELECT value FROM income 
+            f"""SELECT SUM(value) FROM income 
                 WHERE user = '{user}'
                 AND recurring = '1'
                 """)
         one_off_incomes = db.fetch_data(
-            f"""SELECT value FROM income 
+            f"""SELECT SUM(value) FROM income 
                 WHERE user = '{user}'
                 AND recurring = '0'
                 AND month(date) = '{month}'
                 """)
         db.close_database_connection()
-        monthly = float(f"{round(sum(i[0] for i in monthly_incomes), 2)}")
-        oneoff = float(f"{round(sum(i[0] for i in one_off_incomes), 2)}")
-        self.manager.total_income = str(monthly + oneoff)
+        monthly = monthly_incomes[0][0]
+        oneoff = one_off_incomes[0][0]
+        self.manager.total_income = str(round(monthly + oneoff, 2))
         self.manager.current_screen.ids.total_income.text \
             = f"£{(str(self.manager.total_income))}"
 
@@ -159,12 +159,12 @@ class MainMenu(Screen):
         month = dt.today().month
         db = DataBaseObject()
         userquery = db.fetch_data(
-            f"""SELECT value FROM payments 
+            f"""SELECT SUM(value) FROM payments 
                 WHERE user = '{user}'
                 AND month(date) = '{month}'
                 """)
         db.close_database_connection()
-        self.manager.total_spend = f"{round(sum(i[0] for i in userquery), 2)}"
+        self.manager.total_spend = str(round(userquery[0][0], 2))
         self.manager.current_screen.ids.total_spend.text \
             = f"£{str(self.manager.total_spend)}"
 
@@ -175,11 +175,11 @@ class MainMenu(Screen):
         user = self.manager.current_user
         db = DataBaseObject()
         userquery = db.fetch_data(
-            f"""SELECT monthly_value FROM bills 
+            f"""SELECT sum(monthly_value) FROM bills 
                 WHERE user = '{user}'
                 """)
         db.close_database_connection()
-        self.manager.total_bills = f"{round(sum(i[0] for i in userquery), 2)}"
+        self.manager.total_bills = str(round(userquery[0][0], 2))
         self.manager.current_screen.ids.total_bills.text \
             = f"£{str(self.manager.total_bills)}"
 
