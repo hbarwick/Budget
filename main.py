@@ -44,7 +44,7 @@ class LogonScreen(Screen):
 
     def check_user_and_pass(self):
         with DataBaseObject() as db:
-            query ="""SELECT * FROM users 
+            query = """SELECT * FROM users 
                    WHERE username = %s
                    AND password = %s
                    """
@@ -62,7 +62,6 @@ class LogonScreen(Screen):
 
 
 class NewUserScreen(Screen):
-
     """Kivy Screen to create new user and add to
     the MySQL database"""
 
@@ -191,7 +190,7 @@ class MainMenu(Screen):
                     float(self.manager.total_spend) +
                     float(self.manager.total_bills)), 2)
         )
-        self.manager.current_screen.ids.funds_remaining.text =\
+        self.manager.current_screen.ids.funds_remaining.text = \
             f"£{self.manager.funds_remaining}"
 
     def on_logout_button_pressed(self):
@@ -499,10 +498,12 @@ class MainApp(App):
     def build(self):
         return RootWidget()
 
+
 def popup_message(title, message):
     popup = Popup(title=title,
                   content=Label(text=message),
                   size_hint=(None, None), size=(400, 400))
     popup.open()
+
 
 MainApp().run()
